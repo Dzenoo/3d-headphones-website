@@ -5,7 +5,7 @@
 html,
 body {
   height: 100vh;
-  background: #f0f1f3;
+  background: radial-gradient(#1e1e1ede, #111111);
 }
 
 canvas {

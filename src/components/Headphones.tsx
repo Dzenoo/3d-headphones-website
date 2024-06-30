@@ -11,15 +11,27 @@ const Headphones: React.FC = () => {
       if (child.isMesh) {
         if (child.name === "Circle") {
           child.material = new THREE.MeshStandardMaterial({
-            color: new THREE.Color("red"),
+            color: new THREE.Color("#000000"),
+            roughness: 0.7,
+            metalness: 0.8,
           });
-        } else if (child.name === "Speaker") {
+        } else if (
+          child.name === "Speaker_Right" ||
+          child.name === "Speaker_Left"
+        ) {
           child.material = new THREE.MeshStandardMaterial({
-            color: new THREE.Color("green"),
+            color: new THREE.Color("#000000"),
+            roughness: 0.5,
+            metalness: 0.7,
           });
-        } else if (child.name === "Squis") {
+        } else if (
+          child.name === "Squis_Right" ||
+          child.name === "Squis_Left"
+        ) {
           child.material = new THREE.MeshStandardMaterial({
-            color: new THREE.Color("blue"),
+            color: new THREE.Color("#000000"),
+            roughness: 0.7,
+            metalness: 0.9,
           });
         }
       }
