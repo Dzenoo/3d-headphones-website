@@ -1,10 +1,30 @@
 "use client";
 import * as THREE from "three";
-import { Center, useGLTF } from "@react-three/drei";
-import React, { useEffect } from "react";
+import { Center, useGLTF, useScroll } from "@react-three/drei";
+import React, { useEffect, useRef } from "react";
+import { useFrame } from "@react-three/fiber";
+import { gsap } from "gsap";
 
 const Headphones: React.FC = () => {
   const { scene } = useGLTF("./models/headphones.glb");
+
+  const ref = useRef<any>();
+  const tl = useRef<any>();
+
+  const scroll = useScroll();
+
+  useFrame(() => {
+    tl.current!.seek(scroll.offset * tl.current!.duration());
+  });
+
+  useEffect(() => {
+    tl.current = gsap.timeline();
+
+    tl.current!.to(ref.current!.position, {
+      duration: 0.1,
+      y: -0.1,
+    });
+  }, []);
 
   useEffect(() => {
     scene.traverse((child: any) => {
@@ -40,7 +60,7 @@ const Headphones: React.FC = () => {
 
   return (
     <Center>
-      <primitive object={scene}></primitive>
+      <primitive ref={ref} object={scene}></primitive>
     </Center>
   );
 };

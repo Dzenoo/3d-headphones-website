@@ -2,10 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+::-webkit-scrollbar {
+  display: none;
+}
+
 html,
 body {
+  overflow: hidden;
   height: 100vh;
-  background: radial-gradient(#1e1e1ede, #111111);
+  background: radial-gradient(#1e1e1e, #111111);
 }
 
 canvas {
