@@ -12,8 +12,8 @@ const Headphones: React.FC = () => {
         if (child.name === "Circle") {
           child.material = new THREE.MeshStandardMaterial({
             color: new THREE.Color("#000000"),
-            roughness: 0.7,
-            metalness: 0.8,
+            roughness: 0.5,
+            metalness: 1.0,
           });
         } else if (
           child.name === "Speaker_Right" ||
