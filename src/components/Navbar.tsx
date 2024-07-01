@@ -7,7 +7,7 @@ const Navbar: React.FC = () => {
       <div>
         <h1 className="text-2xl text-white font-bold">Pulse</h1>
       </div>
-      <div>
+      <div className="w-[18%]">
         <ul className="flex gap-10">
           {[
             { id: 1, title: "Overview", href: "" },

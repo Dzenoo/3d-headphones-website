@@ -14,7 +14,9 @@ const Headphones: React.FC = () => {
   const scroll = useScroll();
 
   useFrame(() => {
-    tl.current!.seek(scroll.offset * tl.current!.duration());
+    if (tl) {
+      tl.current.seek(scroll.offset * tl.current!.duration());
+    }
   });
 
   useEffect(() => {
