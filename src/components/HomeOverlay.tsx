@@ -97,7 +97,7 @@ const Section = ({
       ? "flex flex-col items-start"
       : "flex flex-col items-center";
 
-  const { ref, inView } = useInView({});
+  const { ref, inView } = useInView();
   const animateRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
