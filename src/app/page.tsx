@@ -10,7 +10,7 @@ import { Canvas } from "@react-three/fiber";
 export default function Home() {
   return (
     <Canvas flat>
-      <ScrollControls pages={5} damping={0.15}>
+      <ScrollControls pages={5} damping={0.25}>
         <HomeOverlay />
         <Headphones />
       </ScrollControls>

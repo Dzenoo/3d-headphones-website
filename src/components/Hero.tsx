@@ -27,6 +27,7 @@ const Hero: React.FC = () => {
             </p>
           </div>
         </div>
+        w
       </div>
     </div>
   );

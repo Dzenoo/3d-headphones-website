@@ -1,6 +1,8 @@
 import { Scroll } from "@react-three/drei";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Hero from "./Hero";
+import { useInView } from "react-intersection-observer";
+import gsap from "gsap";
 
 const HomeOverlay: React.FC = () => {
   return (
@@ -95,9 +97,33 @@ const Section = ({
       ? "flex flex-col items-start"
       : "flex flex-col items-center";
 
+  const { ref, inView } = useInView({});
+  const animateRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (inView) {
+      gsap.fromTo(
+        animateRef.current,
+        {
+          y: 50,
+          opacity: 0,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          ease: "power3.out",
+          duration: 1,
+        }
+      );
+    }
+  }, [inView]);
+
   return (
-    <section className={`h-screen w-full ${hero ? null : alignmentClass}`}>
-      {children}
+    <section
+      ref={ref}
+      className={`h-screen w-full ${hero ? "" : alignmentClass}`}
+    >
+      <div ref={animateRef}>{children}</div>
     </section>
   );
 };
