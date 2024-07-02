@@ -23,20 +23,42 @@ const Headphones: React.FC = () => {
     if (ref.current) {
       tl.current = gsap.timeline();
 
-      tl.current.to(ref.current.position, {
-        duration: 0.1,
-        y: -0.1,
-      });
+      const positions = [
+        { x: -1.5, y: -0.1, z: 0.5 },
+        { x: 1.5, y: 0, z: -0.5 },
+        { x: -0.5, y: 1.5, z: 1 },
+        { x: 1.5, y: 0, z: 1.0 },
+      ];
 
-      tl.current.to(
-        ref.current.position,
-        {
-          duration: 0.5,
-          x: 0.5,
-          z: 0.5,
-        },
-        0
-      );
+      const rotations = [
+        { x: 0, y: 1.5, z: 0 },
+        { x: 0, y: -1.5, z: 0 },
+        { x: 1.5, y: 1.5, z: 0 },
+        { x: 0, y: 0, z: 0 },
+      ];
+
+      positions.forEach((pos, i) => {
+        tl.current!.to(
+          ref.current!.position,
+          {
+            duration: 0.5,
+            x: pos.x,
+            y: pos.y,
+            z: pos.z,
+          },
+          i * 0.5
+        );
+        tl.current!.to(
+          ref.current!.rotation,
+          {
+            duration: 0.5,
+            x: rotations[i].x,
+            y: rotations[i].y,
+            z: rotations[i].z,
+          },
+          i * 0.5
+        );
+      });
     }
   }, []);
 

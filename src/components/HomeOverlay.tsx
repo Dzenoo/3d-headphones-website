@@ -9,8 +9,8 @@ const HomeOverlay: React.FC = () => {
         <Section hero>
           <Hero />
         </Section>
-        <Section flex>
-          <div className="flex flex-col gap-5 justify-start ">
+        <Section align="right">
+          <div className="flex flex-col gap-5 justify-start pt-60 ">
             <div>
               <h1 className="font-bold text-5xl text-white">
                 Immersive 3D Audio
@@ -26,7 +26,7 @@ const HomeOverlay: React.FC = () => {
             </div>
           </div>
         </Section>
-        <Section>
+        <Section align="left">
           <div className="flex flex-col gap-5 justify-start">
             <div>
               <h1 className="font-bold text-5xl text-white">
@@ -42,7 +42,7 @@ const HomeOverlay: React.FC = () => {
             </div>
           </div>
         </Section>
-        <Section flex>
+        <Section align="right">
           <div className="flex flex-col gap-5 justify-start">
             <div>
               <h1 className="font-bold text-5xl text-white">
@@ -58,7 +58,7 @@ const HomeOverlay: React.FC = () => {
             </div>
           </div>
         </Section>
-        <Section>
+        <Section align="left">
           <div className="flex flex-col gap-5 justify-start">
             <div>
               <h1 className="font-bold text-5xl text-white">
@@ -80,18 +80,23 @@ const HomeOverlay: React.FC = () => {
 };
 
 const Section = ({
-  flex,
   children,
   hero,
+  align,
 }: {
   hero?: boolean;
-  flex?: boolean;
   children: React.ReactNode;
+  align?: "left" | "right" | "center";
 }) => {
-  const alig = flex ? "flex flex-col items-end" : "flex flex-col items-start";
+  const alignmentClass =
+    align === "right"
+      ? "flex flex-col items-end"
+      : align === "left"
+      ? "flex flex-col items-start"
+      : "flex flex-col items-center";
 
   return (
-    <section className={`h-screen w-full ${hero ? null : alig}`}>
+    <section className={`h-screen w-full ${hero ? null : alignmentClass}`}>
       {children}
     </section>
   );
