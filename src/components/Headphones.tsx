@@ -13,7 +13,14 @@ const Headphones: React.FC = () => {
 
   const scroll = useScroll();
 
-  useFrame(() => {
+  const uniforms = {
+    uColor: { value: new THREE.Color("#1b1b1b") },
+    uTime: { value: 0 },
+  };
+
+  useFrame((state) => {
+    uniforms.uTime.value = state.clock.getElapsedTime();
+
     if (tl.current) {
       tl.current.seek(scroll.offset * tl.current.duration());
     }
@@ -82,10 +89,63 @@ const Headphones: React.FC = () => {
             metalness: 0.7,
           });
         } else if (mesh.name === "Squis_Right" || mesh.name === "Squis_Left") {
-          mesh.material = new THREE.MeshStandardMaterial({
-            color: new THREE.Color("#000000"),
-            roughness: 0.7,
-            metalness: 0.9,
+          mesh.material = new THREE.ShaderMaterial({
+            vertexShader: `
+              varying vec3 vNormal;
+              varying vec3 vPosition;
+              uniform float uTime;
+
+              void main() {
+                vec3 transformed = position;
+
+                // Apply wave effect
+                float waveAmplitude = 0.1;
+                float waveFrequency = 2.0;
+                transformed.y += sin(transformed.x * waveFrequency + uTime) * waveAmplitude;
+
+                vec4 modelPosition = modelMatrix * vec4(transformed, 1.0);
+                gl_Position = projectionMatrix * viewMatrix * modelPosition;
+
+                vec4 modelNormal = modelMatrix * vec4(normal, 0.0);
+                vNormal = modelNormal.xyz;
+                vPosition = modelPosition.xyz;
+              }
+            `,
+            fragmentShader: `
+              uniform vec3 uColor;
+              varying vec3 vNormal;
+              varying vec3 vPosition;
+
+              vec3 directionalLight(vec3 lightColor, float lightIntensity, vec3 normal, vec3 lightPosition, vec3 viewDirection, float specularPower) {
+                  vec3 lightDirection = normalize(lightPosition);
+                  vec3 lightReflection = reflect(-lightDirection, normal);
+                  float shading = dot(normal, lightDirection);
+                  shading = max(0.0, shading);
+                  float specular = -dot(lightReflection, viewDirection);
+                  specular = max(0.0, specular);
+                  specular = pow(specular, specularPower);
+                  return lightColor * lightIntensity * shading + lightColor * lightIntensity * specular;
+              }
+
+               void main() {
+                    vec3 normal = normalize(vNormal);
+
+                    vec3 viewDirection = normalize(vPosition - cameraPosition);
+
+                    vec3 color = uColor;
+
+                    // Lights
+                    vec3 light = vec3(0.0);
+                    light += directionalLight(vec3(1.0, 1.0, 1.0), 2.0, normal, vec3(0.0, 0.0, 3.0), viewDirection, 17.0);
+                    color *= light;
+
+                    // Final color
+                    gl_FragColor = vec4(color, 1.0);
+                    #include <tonemapping_fragment>
+                    #include <colorspace_fragment>
+              }
+            `,
+            uniforms,
           });
         }
       }
