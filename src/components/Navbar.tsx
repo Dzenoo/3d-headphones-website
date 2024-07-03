@@ -1,3 +1,4 @@
+import { Menu } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
@@ -7,7 +8,7 @@ const Navbar: React.FC = () => {
       <div>
         <h1 className="text-2xl text-white font-bold">Pulse</h1>
       </div>
-      <div className="w-[18%]">
+      <div className="w-[18%] max-lg:hidden">
         <ul className="flex gap-10">
           {[
             { id: 1, title: "Overview", href: "" },
@@ -26,9 +27,14 @@ const Navbar: React.FC = () => {
           ))}
         </ul>
       </div>
-      <div>
+      <div className="max-lg:hidden">
         <button className="py-2 px-10 rounded-full bg-blue-700 text-white">
           Buy
+        </button>
+      </div>
+      <div className="lg:hidden">
+        <button>
+          <Menu size={50} color="#ffffff" />
         </button>
       </div>
     </header>

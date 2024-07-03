@@ -1,17 +1,31 @@
 "use client";
 import * as THREE from "three";
-import { Center, useGLTF, useScroll } from "@react-three/drei";
-import React, { useEffect, useRef } from "react";
+import { Center, useGLTF } from "@react-three/drei";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import { gsap } from "gsap";
+import { useScrollBasedAnimation } from "@/hooks/useScrollBasedAnimation";
 
 const Headphones: React.FC = () => {
   const { scene } = useGLTF("./models/headphones.glb");
 
   const ref = useRef<THREE.Object3D>(null);
-  const tl = useRef<GSAPTimeline | null>(null);
 
-  const scroll = useScroll();
+  useScrollBasedAnimation(ref, {
+    positions: [
+      new THREE.Vector3(-1.5, -0.1, 0.5),
+      new THREE.Vector3(1.5, 0, -0.5),
+      new THREE.Vector3(-0.5, 1.5, 1),
+      new THREE.Vector3(1.5, 0, 1.0),
+      new THREE.Vector3(0, 0, 0),
+    ],
+    rotations: [
+      new THREE.Euler(0, 1.5, 0),
+      new THREE.Euler(0, -1.5, 0),
+      new THREE.Euler(1.5, 1.5, 0),
+      new THREE.Euler(0.1, 0.5, 0.7),
+      new THREE.Euler(0, 0, 0),
+    ],
+  });
 
   const uniforms = {
     uColor: { value: new THREE.Color("#1b1b1b") },
@@ -20,54 +34,7 @@ const Headphones: React.FC = () => {
 
   useFrame((state) => {
     uniforms.uTime.value = state.clock.getElapsedTime();
-
-    if (tl.current) {
-      tl.current.seek(scroll.offset * tl.current.duration());
-    }
   });
-
-  useEffect(() => {
-    if (ref.current) {
-      tl.current = gsap.timeline();
-
-      const positions = [
-        { x: -1.5, y: -0.1, z: 0.5 },
-        { x: 1.5, y: 0, z: -0.5 },
-        { x: -0.5, y: 1.5, z: 1 },
-        { x: 1.5, y: 0, z: 1.0 },
-      ];
-
-      const rotations = [
-        { x: 0, y: 1.5, z: 0 },
-        { x: 0, y: -1.5, z: 0 },
-        { x: 1.5, y: 1.5, z: 0 },
-        { x: 0, y: 0, z: 0 },
-      ];
-
-      positions.forEach((pos, i) => {
-        tl.current!.to(
-          ref.current!.position,
-          {
-            duration: 0.5,
-            x: pos.x,
-            y: pos.y,
-            z: pos.z,
-          },
-          i * 0.5
-        );
-        tl.current!.to(
-          ref.current!.rotation,
-          {
-            duration: 0.5,
-            x: rotations[i].x,
-            y: rotations[i].y,
-            z: rotations[i].z,
-          },
-          i * 0.5
-        );
-      });
-    }
-  }, []);
 
   useEffect(() => {
     scene.traverse((child) => {
@@ -98,7 +65,6 @@ const Headphones: React.FC = () => {
               void main() {
                 vec3 transformed = position;
 
-                // Apply wave effect
                 float waveAmplitude = 0.1;
                 float waveFrequency = 2.0;
                 transformed.y += sin(transformed.x * waveFrequency + uTime) * waveAmplitude;
@@ -134,12 +100,10 @@ const Headphones: React.FC = () => {
 
                     vec3 color = uColor;
 
-                    // Lights
                     vec3 light = vec3(0.0);
                     light += directionalLight(vec3(1.0, 1.0, 1.0), 2.0, normal, vec3(0.0, 0.0, 3.0), viewDirection, 17.0);
                     color *= light;
 
-                    // Final color
                     gl_FragColor = vec4(color, 1.0);
                     #include <tonemapping_fragment>
                     #include <colorspace_fragment>
@@ -151,6 +115,23 @@ const Headphones: React.FC = () => {
       }
     });
   }, [scene]);
+
+  useLayoutEffect(() => {
+    const updateScale = () => {
+      if (ref.current) {
+        const screenWidth = window.innerWidth;
+        const scale = screenWidth < 768 ? 0.7 : 1;
+        ref.current.scale.set(scale, scale, scale);
+      }
+    };
+
+    window.addEventListener("resize", updateScale);
+    updateScale();
+
+    return () => {
+      window.removeEventListener("resize", updateScale);
+    };
+  }, []);
 
   return (
     <Center>
