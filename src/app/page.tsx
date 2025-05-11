@@ -1,21 +1,26 @@
 "use client";
 
-import Headphones from "@/components/Headphones";
-import HomeOverlay from "@/components/HomeOverlay";
-import Experience from "@/components/setup/Experience";
-import Lights from "@/components/setup/Lights";
-import { ScrollControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
+import { ScrollControls } from "@react-three/drei";
+
+import Headphones from "@/components/canvas/3d-models/Headphones";
+import HomeOverlay from "@/components/pages/home/HomeOverlay";
+import Experience from "@/components/canvas/setup/Experience";
+import Lights from "@/components/canvas/setup/Lights";
+import LoadingScreen from "@/components/shared/LoadingScreen";
 
 export default function Home() {
   return (
-    <Canvas flat>
-      <ScrollControls pages={5} damping={0.25}>
-        <HomeOverlay />
-        <Headphones />
-      </ScrollControls>
-      <Experience />
-      <Lights />
-    </Canvas>
+    <>
+      <LoadingScreen />
+      <Canvas flat>
+        <ScrollControls pages={5} damping={0.5}>
+          <HomeOverlay />
+          <Headphones />
+        </ScrollControls>
+        <Experience />
+        <Lights />
+      </Canvas>
+    </>
   );
 }
