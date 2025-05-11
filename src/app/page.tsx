@@ -8,12 +8,14 @@ import HomeOverlay from "@/components/pages/home/HomeOverlay";
 import Experience from "@/components/canvas/setup/Experience";
 import Lights from "@/components/canvas/setup/Lights";
 import LoadingScreen from "@/components/shared/LoadingScreen";
+import CameraRig from "@/components/canvas/CameraRig";
 
 export default function Home() {
   return (
     <>
       <LoadingScreen />
       <Canvas flat>
+        <CameraRig />
         <ScrollControls pages={5} damping={0.5}>
           <HomeOverlay />
           <Headphones />
