@@ -9,19 +9,25 @@ import Experience from "@/components/canvas/setup/Experience";
 import Lights from "@/components/canvas/setup/Lights";
 import LoadingScreen from "@/components/shared/LoadingScreen";
 import CameraRig from "@/components/canvas/CameraRig";
+import FloatingParticles from "@/components/canvas/FloatingParticles";
+import PostProcessing from "@/components/canvas/PostProcessing";
 
 export default function Home() {
   return (
     <>
       <LoadingScreen />
-      <Canvas flat>
+      <Canvas flat gl={{ antialias: true, alpha: false }} dpr={[1, 2]}>
+        <color attach="background" args={["#050505"]} />
+        <fog attach="fog" args={["#050505", 8, 25]} />
         <CameraRig />
-        <ScrollControls pages={5} damping={0.5}>
+        <ScrollControls pages={6} damping={0.4}>
           <HomeOverlay />
           <Headphones />
+          <FloatingParticles />
         </ScrollControls>
         <Experience />
         <Lights />
+        <PostProcessing />
       </Canvas>
     </>
   );
